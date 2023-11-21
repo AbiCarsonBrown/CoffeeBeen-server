@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use("/coffeeshops", coffeeshopRoutes);
 app.use("/auth", authRoutes);
-// app.use("/profile", profileRoutes);
+app.use("/profile", profileRoutes);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
