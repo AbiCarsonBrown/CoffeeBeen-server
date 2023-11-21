@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-require("dotenv").config();
 const knex = require("knex")(require("../knexfile"));
 
 router.route("/").get(async (_req, res) => {
