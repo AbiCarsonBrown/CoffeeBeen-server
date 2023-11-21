@@ -29,4 +29,27 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(404).send("Please enter the required fields");
+  }
+
+  const user = await knex("user").where({ email: email }).first();
+  const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+
+  if (!user || !isPasswordCorrect) {
+    return res.status(400).send("Invalid email or password");
+  }
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_KEY,
+    { expiresIn: "24h" }
+  );
+
+  res.send({ token });
+});
+
 module.exports = router;
