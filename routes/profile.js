@@ -7,16 +7,8 @@ router.route("/").get(authenticate, async (req, res) => {
   try {
     const user = await knex("user").where({ id: req.user_id }).first();
     delete user.password;
-    res.status(200).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(400).send(`Error retrieving user: ${error}`);
-  }
-});
 
-router.route("/been").get(authenticate, async (req, res) => {
-  try {
-    const data = await knex("visit")
+    const visits = await knex("visit")
       .where({ "visit.user_id": req.user_id })
       .join("coffeeshop", "visit.coffeeshop_id", "coffeeshop.id")
       .select(
@@ -29,9 +21,10 @@ router.route("/been").get(authenticate, async (req, res) => {
         "visit.review"
       );
 
-    res.status(200).json(data);
+    res.status(200).json([user, visits]);
   } catch (error) {
-    res.status(400).send(`Error retrieving coffee shops: ${error}`);
+    console.error(error);
+    res.status(400).send(`Error retrieving user: ${error}`);
   }
 });
 
