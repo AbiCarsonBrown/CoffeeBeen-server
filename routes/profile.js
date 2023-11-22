@@ -3,6 +3,17 @@ const router = express.Router();
 const knex = require("knex")(require("../knexfile"));
 const authenticate = require("../middleware/authenticate");
 
+router.route("/").get(authenticate, async (req, res) => {
+  try {
+    const user = await knex("user").where({ id: req.user_id }).first();
+    delete user.password;
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(401).send(`Error finding user: ${error}`);
+  }
+});
+
 router.route("/been").get(authenticate, async (req, res) => {
   try {
     const data = await knex("visit")

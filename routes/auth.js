@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
     res.status(201).send("Registered successfully");
   } catch (error) {
     console.error(error);
-    res.status(400).send("Failed registration");
+    res.status(400).send(`Failed registration: ${error}`);
   }
 });
 
