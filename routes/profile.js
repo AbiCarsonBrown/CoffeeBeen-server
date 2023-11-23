@@ -16,12 +16,45 @@ router.route("/").get(authenticate, async (req, res) => {
         "visit.coffeeshop_id",
         "coffeeshop.coffeeshop_name",
         "coffeeshop.address",
+        "visit.visited",
         "visit.on_wishlist",
         "visit.rating",
         "visit.review"
       );
 
     res.status(200).json([user, visits]);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(`Error retrieving user: ${error}`);
+  }
+});
+
+router.route("/visits").get(authenticate, async (req, res) => {
+  try {
+    const visits = await knex("coffeeshop")
+      .leftOuterJoin("visit", function () {
+        this.on("coffeeshop.id", "=", "visit.coffeeshop_id").andOn(
+          knex.raw("?", req.user_id),
+          "=",
+          "visit.user_id"
+        );
+      })
+      .select(
+        "coffeeshop.id as coffeeshop_id",
+        "coffeeshop.coffeeshop_name",
+        "coffeeshop.address",
+        "coffeeshop.longitude",
+        "coffeeshop.latitude",
+        "visit.id as visit_id",
+        "visit.visited",
+        "visit.on_wishlist",
+        "visit.rating",
+        "visit.review"
+      )
+      .where({ "visit.user_id": req.user_id })
+      .orWhereNull("visit.user_id");
+
+    res.status(200).json(visits);
   } catch (error) {
     console.error(error);
     res.status(400).send(`Error retrieving user: ${error}`);
