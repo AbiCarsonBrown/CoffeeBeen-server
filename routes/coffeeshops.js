@@ -4,7 +4,13 @@ const knex = require("knex")(require("../knexfile"));
 
 router.route("/").get(async (_req, res) => {
   try {
-    const data = await knex("coffeeshop");
+    const data = await knex("coffeeshop").select(
+      "coffeeshop.id as coffeeshop_id",
+      "coffeeshop.coffeeshop_name",
+      "coffeeshop.address",
+      "coffeeshop.longitude",
+      "coffeeshop.latitude"
+    );
     res.status(200).json(data);
   } catch (error) {
     res.status(400).send(`Error retrieving coffee shops: ${error}`);
@@ -16,7 +22,7 @@ router.route("/:id").get(async (req, res) => {
     const coffeeShop = await knex("coffeeshop")
       .where({ "coffeeshop.id": req.params.id })
       .select(
-        "coffeeshop.id",
+        "coffeeshop.id as coffeeshop_id",
         "coffeeshop.coffeeshop_name",
         "coffeeshop.address",
         "coffeeshop.description"
