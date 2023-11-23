@@ -8,21 +8,21 @@ router.route("/").get(authenticate, async (req, res) => {
     const user = await knex("user").where({ id: req.user_id }).first();
     delete user.password;
 
-    const visits = await knex("visit")
-      .where({ "visit.user_id": req.user_id })
-      .join("coffeeshop", "visit.coffeeshop_id", "coffeeshop.id")
-      .select(
-        "visit.id",
-        "visit.coffeeshop_id",
-        "coffeeshop.coffeeshop_name",
-        "coffeeshop.address",
-        "visit.visited",
-        "visit.on_wishlist",
-        "visit.rating",
-        "visit.review"
-      );
+    // const visits = await knex("visit")
+    //   .where({ "visit.user_id": req.user_id })
+    //   .join("coffeeshop", "visit.coffeeshop_id", "coffeeshop.id")
+    //   .select(
+    //     "visit.id",
+    //     "visit.coffeeshop_id",
+    //     "coffeeshop.coffeeshop_name",
+    //     "coffeeshop.address",
+    //     "visit.visited",
+    //     "visit.on_wishlist",
+    //     "visit.rating",
+    //     "visit.review"
+    //   );
 
-    res.status(200).json([user, visits]);
+    res.status(200).json(user);
   } catch (error) {
     console.error(error);
     res.status(400).send(`Error retrieving user: ${error}`);
@@ -34,9 +34,9 @@ router.route("/visits").get(authenticate, async (req, res) => {
     const visits = await knex("coffeeshop")
       .leftOuterJoin("visit", function () {
         this.on("coffeeshop.id", "=", "visit.coffeeshop_id").andOn(
-          knex.raw("?", req.user_id),
+          "visit.user_id",
           "=",
-          "visit.user_id"
+          req.user_id
         );
       })
       .select(
