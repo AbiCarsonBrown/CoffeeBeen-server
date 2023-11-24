@@ -45,7 +45,7 @@ router
       res.status(200).json(visits);
     } catch (error) {
       console.error(error);
-      res.status(400).send(`Error retrieving user: ${error}`);
+      res.status(400).send(`Error retrieving user visits: ${error}`);
     }
   })
   .post(authenticate, async (req, res) => {
@@ -91,5 +91,25 @@ router
       res.status(400).send(`Error posting user input: ${error}`);
     }
   });
+
+router.route("/visits/:id").get(authenticate, async (req, res) => {
+  try {
+    const visit = await knex("visit")
+      .where({ "visit.user_id": req.user_id })
+      .where({ "visit.coffeeshop_id": req.params.id })
+      .select(
+        "visit.user_id",
+        "visit.id as visit_id",
+        "visit.visited",
+        "visit.on_wishlist",
+        "visit.rating",
+        "visit.review"
+      );
+    res.status(200).json(visit);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(`Error retrieving user visit: ${error}`);
+  }
+});
 
 module.exports = router;
