@@ -33,6 +33,7 @@ router.route("/:id").get(async (req, res) => {
       .join("user", "visit.user_id", "user.id")
       .select(
         "user.username",
+        "visit.id as visit_id",
         "visit.visited",
         "visit.on_wishlist",
         "visit.rating",
