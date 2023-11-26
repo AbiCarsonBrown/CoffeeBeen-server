@@ -5,14 +5,22 @@
 exports.up = function (knex) {
   return knex.schema.createTable("visit", (table) => {
     table.increments("id").primary();
-    table.bigInteger("coffeeshop_id").notNullable().unsigned();
-    table.bigInteger("user_id").notNullable().unsigned();
+    table
+      .bigInteger("coffeeshop_id")
+      .notNullable()
+      .unsigned()
+      .references("id")
+      .inTable("coffeeshop");
+    table
+      .bigInteger("user_id")
+      .notNullable()
+      .unsigned()
+      .references("id")
+      .inTable("user");
     table.boolean("visited");
     table.boolean("on_wishlist");
     table.smallint("rating").unsigned();
     table.string("review");
-    table.foreign("coffeeshop_id").references("coffeeshop.id");
-    table.foreign("user_id").references("user.id");
   });
 };
 
