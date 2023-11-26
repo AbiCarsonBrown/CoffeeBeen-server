@@ -37,9 +37,14 @@ router.post("/login", async (req, res) => {
   }
 
   const user = await knex("user").where({ email: email }).first();
+
+  if (!user) {
+    return res.status(400).send("Invalid email or password");
+  }
+
   const isPasswordCorrect = bcrypt.compareSync(password, user.password);
 
-  if (!user || !isPasswordCorrect) {
+  if (!isPasswordCorrect) {
     return res.status(400).send("Invalid email or password");
   }
 
