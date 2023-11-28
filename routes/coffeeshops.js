@@ -26,7 +26,8 @@ router.route("/:id").get(async (req, res) => {
         "coffeeshop.coffeeshop_name",
         "coffeeshop.address",
         "coffeeshop.description"
-      );
+      )
+      .first();
 
     const visits = await knex("visit")
       .where({ "visit.coffeeshop_id": req.params.id })
