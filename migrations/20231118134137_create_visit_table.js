@@ -6,17 +6,19 @@ exports.up = function (knex) {
   return knex.schema.createTable("visit", (table) => {
     table.increments("id").primary();
     table
-      .bigInteger("coffeeshop_id")
+      .integer("coffeeshop_id")
       .notNullable()
       .unsigned()
       .references("id")
-      .inTable("coffeeshop");
+      .inTable("coffeeshop")
+      .onDelete("cascade");
     table
-      .bigInteger("user_id")
+      .integer("user_id")
       .notNullable()
       .unsigned()
       .references("id")
-      .inTable("user");
+      .inTable("user")
+      .onDelete("cascade");
     table.boolean("visited");
     table.boolean("on_wishlist");
     table.smallint("rating").unsigned();
