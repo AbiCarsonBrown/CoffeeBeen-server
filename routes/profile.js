@@ -104,7 +104,8 @@ router.route("/visits/:id").get(authenticate, async (req, res) => {
         "visit.on_wishlist",
         "visit.rating",
         "visit.review"
-      );
+      )
+      .first();
     res.status(200).json(visit);
   } catch (error) {
     console.error(error);
