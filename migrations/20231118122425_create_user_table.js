@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
   return knex.schema.createTable("user", (table) => {
-    table.increments("id").primary().onDelete(CASCADE);
+    table.increments("id").primary();
     table.string("full_name").notNullable();
     table.string("username").notNullable().unique();
     table.string("email").notNullable().unique();
